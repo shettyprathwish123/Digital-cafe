@@ -33,12 +33,15 @@ const OrderTracking = ({ mode, toggleTheme }) => {
 
   useEffect(() => {
     loadOrder();
+    // Commenting out EventSource temporarily as it's causing blank page issues
+    // The page will now use polling (setInterval) for updates instead of real-time SSE
+    /*
     let es;
     let stopped = false;
     const connect = () => {
       if (stopped) return;
       try {
-        es = new EventSource(`/api/orders/${orderId}/stream`);
+        es = new EventSource(`${window.location.origin}/api/orders/${orderId}/stream`);
         es.addEventListener('order-update', (ev) => {
           try {
             const data = JSON.parse(ev.data);
@@ -53,11 +56,12 @@ const OrderTracking = ({ mode, toggleTheme }) => {
       } catch { }
     };
     connect();
+    */
     const interval = setInterval(loadOrder, 10000);
     return () => {
       clearInterval(interval);
-      stopped = true;
-      es && es.close();
+      // stopped = true;
+      // es && es.close();
     };
   }, [orderId]);
 
